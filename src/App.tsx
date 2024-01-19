@@ -1,16 +1,21 @@
 import './App.css';
 import 'rsuite/dist/rsuite.min.css';
 
+import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react';
 import { Nav, Navbar, Sidenav } from 'rsuite';
-import { createContext, useEffect, useState } from 'react';
 
+import { Agent } from './interfaces/agent';
 import Agents from './screens/agents';
 import DashboardIcon from '@rsuite/icons/legacy/Dashboard';
 import GroupIcon from '@rsuite/icons/legacy/Group';
 import Tickets from './screens/tickets';
 import { ToastContainer } from 'react-toastify';
 
-export const UserContext = createContext({ orientation: 'landscape' });
+export const UserContext = createContext({ 
+  orientation: 'landscape',
+  activeAgent: {} as Agent,
+  setActiveAgent: {} as Dispatch<SetStateAction<Agent>>
+});
 
 
 function App() {
@@ -38,6 +43,7 @@ function App() {
   const [expanded, setExpanded] = useState(true);
   const [activeKey, setActiveKey] = useState('1');
   const [activeComponent, setActiveComponent] = useState(<Tickets/>);
+  const [activeAgent, setActiveAgent] = useState<Agent>({} as Agent);
 
   const onNavSelect = (eventKey: string) => {
     setActiveKey(eventKey);
@@ -118,7 +124,7 @@ function App() {
 
   return (
     <div className="App">
-      <UserContext.Provider value={{ orientation: appOrientation }}>
+      <UserContext.Provider value={{ orientation: appOrientation, activeAgent: activeAgent, setActiveAgent: setActiveAgent as Dispatch<SetStateAction<Agent>> }}>
         <ToastContainer />
         {renderView()}
       </UserContext.Provider>

@@ -436,7 +436,13 @@ function Tickets() {
     <div style={{width: '100%'}}>
       {
         (appContext.orientation === 'landscape' || !selectedTicket) &&
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'right', width: '100%' }}>
+          <div 
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between',
+              alignItems: 'right',
+              width: '100%'
+            }}>
             <h2 style={{ textAlign: 'left', margin: 0 }}>Tickets</h2>
             <Button appearance="primary" style={{margin:'10px'}} onClick={createTicket}>Create Ticket</Button>
           </div>
@@ -492,10 +498,10 @@ function Tickets() {
               </List>
             </FlexboxGrid.Item>
         
-            <FlexboxGrid.Item colspan={14} style={{display:'flex', paddingLeft: '1.5rem', paddingRight: '1.5rem'}}>
+            <FlexboxGrid.Item colspan={13} style={{display:'flex', paddingLeft: '1.5rem', paddingRight: '1.5rem'}}>
               {
                 selectedTicket?.id && 
-                  <Container style={{ textAlign: 'right' }}>
+                  <Container style={{ textAlign: 'right', border: '1px solid lightgrey', borderRadius: '10px', padding: '1rem' }}>
                     <h3 style={{ textAlign: 'left', display: 'block', marginBottom:'0.5rem' }}>#{selectedTicket.id} {selectedTicket.topic}</h3>
                     
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom:'1rem' }}>
@@ -506,6 +512,8 @@ function Tickets() {
                     
                     <p style={{ textAlign: 'left', fontSize: 16 }}>{selectedTicket.description}</p>
                     <hr/>
+
+                    <h4 style={{textAlign:'left', 'marginBottom': '0.5rem'}}>Comments</h4>
                     
                     { 
                       selectedTicket?.comments &&
@@ -543,6 +551,13 @@ function Tickets() {
                         </List>
                     }
 
+                    {
+                      (selectedTicket?.id && !selectedTicket?.comments) &&
+                        <div>
+                          <h5 style={{textAlign:'center'}}>No comments yet.</h5>
+                        </div>
+                    }
+
                     <div style={{marginTop:'1rem', display: 'flex', alignItems: 'center'}}>
                       <Input style={{marginRight: '0.5rem'}} value={comment}
                         onChange={(value) => {setComment(value)}}
@@ -555,6 +570,7 @@ function Tickets() {
             </FlexboxGrid.Item>
             
             <FlexboxGrid.Item colspan={4} style={{display:'block'}}>
+              { selectedTicket?.id &&
                 <List style={{display:'block', textAlign:'left', }} hover bordered={true}>
                   <List.Item>
                     <h5>Assignees</h5>
@@ -578,6 +594,7 @@ function Tickets() {
                   </List.Item>
 
                 </List>
+              }
             </FlexboxGrid.Item>
           </FlexboxGrid>
         
@@ -694,32 +711,36 @@ function Tickets() {
 
             <br/><br/>
             
-            <div style={{ textAlign:'left' }}>
-              <h4 style={{marginBottom:'0.5rem'}}>Info</h4>
-              <List style={{display:'block'}} hover bordered={true}>
-                <List.Item>
-                  <h5>Assignees</h5>
-                  {selectedTicket?.assignedTo}
-                </List.Item>
-                <List.Item>
-                  <h5>Created</h5>
-                  {selectedTicket?.dateCreated.toDateString()}
-                </List.Item>
-                <List.Item>
-                  <h5>Type</h5>
-                  {selectedTicket?.type}
-                </List.Item>
-                <List.Item>
-                  <h5>Severity</h5>
-                  {selectedTicket?.severity}
-                </List.Item>
-                <List.Item>
-                  <h5>Status</h5>
-                  {selectedTicket?.status}
-                </List.Item>
+            {
+              selectedTicket?.id && 
+              <div style={{ textAlign:'left' }}>
+                <h4 style={{marginBottom:'0.5rem'}}>Info</h4>
+                <List style={{display:'block'}} hover bordered={true}>
+                  <List.Item>
+                    <h5>Assignees</h5>
+                    {selectedTicket?.assignedTo}
+                  </List.Item>
+                  <List.Item>
+                    <h5>Created</h5>
+                    {selectedTicket?.dateCreated.toDateString()}
+                  </List.Item>
+                  <List.Item>
+                    <h5>Type</h5>
+                    {selectedTicket?.type}
+                  </List.Item>
+                  <List.Item>
+                    <h5>Severity</h5>
+                    {selectedTicket?.severity}
+                  </List.Item>
+                  <List.Item>
+                    <h5>Status</h5>
+                    {selectedTicket?.status}
+                  </List.Item>
 
-              </List>
-            </div>
+                </List>
+              </div>
+            }
+            
           </div>
       }
       
