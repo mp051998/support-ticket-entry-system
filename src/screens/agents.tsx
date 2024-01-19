@@ -82,7 +82,7 @@ const Agents = () => {
   return (
     <div>
       <h2 style={{textAlign:'left', marginBottom:'1rem'}}>Agents</h2>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', height: '80vh', flexWrap: 'wrap', overflow: 'auto' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', height: '75vh', flexWrap: 'wrap', overflow: 'auto' }}>
         {agents.map((agent) => (
           <div>
             {

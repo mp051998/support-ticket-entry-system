@@ -69,40 +69,40 @@ function App() {
   ]
 
   const renderView = () => {
-    if (appOrientation === 'landscape') {
-      return (
-        <div style={{ height: '100vh', display: 'flex' }}>
-          <Sidenav 
-            appearance='inverse'
-            expanded={expanded}
-            style={{ 
-              height: '100%', maxWidth: '12vw' 
-            }}
-            activeKey={activeKey}
-          >
-            <Sidenav.Header>
-              <div style={{ padding: 20 }}>
-                {/* HEADING */}
-              </div>
-            </Sidenav.Header>
-            <Sidenav.Body style={{ textAlign: 'left' }}>
-              <Nav activeKey={activeKey} onSelect={onNavSelect}>
-                {navItems.map(item => (
-                  <Nav.Item key={item.eventKey} eventKey={item.eventKey} icon={item.icon}>
-                    {item.label}
-                  </Nav.Item>
-                ))}
-              </Nav>
-            </Sidenav.Body>
-            <Sidenav.Toggle onToggle={expanded => setExpanded(expanded)} />
-          </Sidenav>
+    // if (appOrientation === 'landscape') {
+    //   return (
+    //     <div style={{ height: '100vh', display: 'flex' }}>
+    //       <Sidenav 
+    //         appearance='inverse'
+    //         expanded={expanded}
+    //         style={{ 
+    //           height: '100%', maxWidth: '12vw' 
+    //         }}
+    //         activeKey={activeKey}
+    //       >
+    //         <Sidenav.Header>
+    //           <div style={{ padding: 20 }}>
+    //             {/* HEADING */}
+    //           </div>
+    //         </Sidenav.Header>
+    //         <Sidenav.Body style={{ textAlign: 'left' }}>
+    //           <Nav activeKey={activeKey} onSelect={onNavSelect}>
+    //             {navItems.map(item => (
+    //               <Nav.Item key={item.eventKey} eventKey={item.eventKey} icon={item.icon}>
+    //                 {item.label}
+    //               </Nav.Item>
+    //             ))}
+    //           </Nav>
+    //         </Sidenav.Body>
+    //         <Sidenav.Toggle onToggle={expanded => setExpanded(expanded)} />
+    //       </Sidenav>
 
-          <div style={{padding: 20, width:'100%'}}>
-            {activeComponent}
-          </div>
-        </div>
-      );
-    } else {
+    //       <div style={{padding: 20, width:'100%'}}>
+    //         {activeComponent}
+    //       </div>
+    //     </div>
+    //   );
+    // } else {
       return (
         <div style={{ position: 'sticky', bottom: 0 }}>
           <Navbar appearance='inverse'>
@@ -119,7 +119,7 @@ function App() {
           </div>
         </div>
       );
-    }
+    // }
   }
 
   return (

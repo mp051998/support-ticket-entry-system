@@ -382,7 +382,7 @@ const dataStyle = {
 
 // TODO: These heights and widths are not properly responsive, fix that
 const landscapeStyle = {
-  height: '75vh',
+  height: '65vh',
   // width: '20vw',
   // overflow: 'hidden'
 }
@@ -498,7 +498,7 @@ function Tickets() {
               </List>
             </FlexboxGrid.Item>
         
-            <FlexboxGrid.Item colspan={13} style={{display:'flex', paddingLeft: '1.5rem', paddingRight: '1.5rem'}}>
+            <FlexboxGrid.Item colspan={13} style={{display:'flex', }}>
               {
                 selectedTicket?.id && 
                   <Container style={{ textAlign: 'right', border: '1px solid lightgrey', borderRadius: '10px', padding: '1rem' }}>
@@ -517,7 +517,7 @@ function Tickets() {
                     
                     { 
                       selectedTicket?.comments &&
-                        <List style={{ overflow: 'auto', maxHeight: '40vh' }}>
+                        <List style={{ overflow: 'auto', maxHeight: '25vh' }}>
                           {selectedTicket.comments.map((comment, index) => (
                             <List.Item key={index}>
                               <FlexboxGrid>
