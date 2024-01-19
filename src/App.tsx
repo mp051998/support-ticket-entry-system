@@ -91,7 +91,7 @@ function App() {
             <Sidenav.Toggle onToggle={expanded => setExpanded(expanded)} />
           </Sidenav>
 
-          <div style={{padding: 20}}>
+          <div style={{padding: 20, width:'100%'}}>
             {activeComponent}
           </div>
         </div>
