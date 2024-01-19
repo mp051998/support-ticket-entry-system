@@ -40,7 +40,7 @@ function App() {
   }
   
   const appOrientation = useOrientation();
-  const [expanded, setExpanded] = useState(true);
+  // const [expanded, setExpanded] = useState(true);
   const [activeKey, setActiveKey] = useState('1');
   const [activeComponent, setActiveComponent] = useState(<Tickets/>);
   const [activeAgent, setActiveAgent] = useState<Agent>({} as Agent);
@@ -113,6 +113,23 @@ function App() {
                 </Nav.Item>
               ))}
             </Nav>
+            {
+              activeAgent?.id &&
+                <Nav pullRight>
+                  <Nav.Menu noCaret openDirection='end' 
+                    title={
+                      <div>
+                        <img src={activeAgent.img} alt='user' style={{ width: '45px', height: '45px', borderRadius: '50%', marginRight: '0.5rem' }} />
+                        {activeAgent.name}
+                      </div>
+                      
+                    }
+                  >
+                    {/* <Nav.Item>{`${activeAgent.name} logged in`}</Nav.Item> */}
+                    <Nav.Item onClick={() => {setActiveAgent({} as Agent)}}>Logout</Nav.Item>
+                  </Nav.Menu>
+                </Nav>
+            }
           </Navbar>
           <div style={{padding: 20}}>
             {activeComponent}

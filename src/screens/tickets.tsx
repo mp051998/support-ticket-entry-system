@@ -1,13 +1,14 @@
 import { Button, Container, FlexboxGrid, IconButton, Input, InputGroup, List, Tag } from 'rsuite';
 import { cloneElement, useContext, useEffect, useState } from 'react';
 
+import CalendarIcon from '@rsuite/icons/Calendar';
 import CreativeIcon from '@rsuite/icons/Creative';
 import DangerIcon from '@rsuite/icons/Danger';
 import PagePreviousIcon from '@rsuite/icons/PagePrevious';
 import PlusRoundIcon from '@rsuite/icons/PlusRound';
 import RemindOutlineIcon from '@rsuite/icons/RemindOutline';
 import SearchIcon from '@rsuite/icons/Search';
-import SendIcon from '@rsuite/icons/Send'
+import SendIcon from '@rsuite/icons/Send';
 import { Ticket } from '../interfaces/ticket';
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircleO';
 import { UserContext } from '../App';
@@ -359,7 +360,6 @@ const styleCenter = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '75px'
 };
 
 const slimText = {
@@ -369,15 +369,12 @@ const slimText = {
   paddingBottom: 5
 };
 
+// TODO: These styles are not properly responsive, fix that
 const titleStyle = {
   paddingBottom: 5,
   whiteSpace: 'nowrap',
-  fontWeight: 1000
-};
-
-const dataStyle = {
-  fontSize: '1.2em',
-  fontWeight: 500
+  fontWeight: 1000,
+  fontSize: '1.3em',
 };
 
 // TODO: These heights and widths are not properly responsive, fix that
@@ -463,33 +460,49 @@ function Tickets() {
               </InputGroup>
               <List bordered style={style} hover autoScroll={true}>
                 {data.map((item, index) => (
-                  <List.Item key={item['id']} index={index + 1} onClick={() => selectTicket(item)}>
+                  <List.Item 
+                    key={item['id']} 
+                    index={index + 1} 
+                    onClick={() => selectTicket(item)}
+                    style={selectedTicket?.id === item['id'] ? {backgroundColor: 'lightskyblue'} : {}}
+                  >
                     <FlexboxGrid>
-                      <FlexboxGrid.Item colspan={4} style={styleCenter}>
+                      <FlexboxGrid.Item colspan={4} style={{...styleCenter, fontSize: 60, float:'left', width: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom:'auto'}}>
                         {cloneElement(icons[item['type'] as keyof typeof icons], {
                           style: {
-                            color: 'darkgrey',
-                            fontSize: '1.5em'
+                            // color: 'darkgrey',
+                            // fontSize: '1.5em'
                           }
                         })}
                       </FlexboxGrid.Item>
                       <FlexboxGrid.Item
-                        colspan={16}
+                        colspan={18}
                         style={{
                           ...styleCenter,
                           flexDirection: 'column',
                           alignItems: 'flex-start',
-                          overflow: 'hidden'
+                          overflow: 'hidden',
+                          // marginLeft: '0.01rem'
                         }}
                       >
-                        <div style={titleStyle}>{item['topic']}</div>
-                        <div style={slimText}>{item['type']}</div>
-                        <div style={slimText}>
-                          <div>
-                            <UserCircleIcon />
-                            {' ' + item['assignedTo']}
-                          </div>
-                          <div>{item['dateCreated'].toDateString()}</div>
+                        <div style={titleStyle}>#{item['id']} {item['topic']}</div>
+                        {/* <div style={{...slimText, fontSize: '1em'}}>{item['type']}</div> */}
+                        {/* <div style={{...slimText, fontSize: '0.9em'}}> */}
+                        {typeTags[item['type'] as keyof typeof icons]}
+
+                        <div style={{display: 'block', alignItems: 'left', justifyContent: 'left'}}>
+                        {/* TODO: The Calendar Icon and User Circle Icon do not align properly column wise*/}
+                          
+                          <FlexboxGrid>
+                            <FlexboxGrid.Item colspan={24} style={{textAlign:'left'}}>
+                              <CalendarIcon /> 
+                              {' ' + item['dateCreated'].toDateString()}
+                            </FlexboxGrid.Item>
+                            <FlexboxGrid.Item colspan={24} style={{textAlign:'left'}}>
+                              <UserCircleIcon /> 
+                              {' ' + item['assignedTo']}
+                            </FlexboxGrid.Item>
+                          </FlexboxGrid>
                         </div>
                       </FlexboxGrid.Item>
                     </FlexboxGrid>
@@ -607,40 +620,48 @@ function Tickets() {
             {
               !selectedTicket?.id &&
                 <List bordered style={style} hover>
-                {data.map((item, index) => (
-                  <List.Item key={item['id']} index={index + 1} onClick={() => selectTicket(item)}>
-                    <FlexboxGrid>
-                      <FlexboxGrid.Item colspan={4} style={styleCenter}>
-                        {cloneElement(icons[item['type'] as keyof typeof icons], {
-                          style: {
-                            color: 'darkgrey',
-                            fontSize: '1.5em'
-                          }
-                        })}
-                      </FlexboxGrid.Item>
-                      <FlexboxGrid.Item
-                        colspan={16}
-                        style={{
-                          ...styleCenter,
-                          flexDirection: 'column',
-                          alignItems: 'flex-start',
-                          overflow: 'hidden'
-                        }}
-                      >
-                        <div style={titleStyle}>{item['topic']}</div>
-                        <div style={slimText}>{item['type']}</div>
-                        <div style={slimText}>
-                          <div>
-                            <UserCircleIcon />
-                            {' ' + item['assignedTo']}
+                  {data.map((item, index) => (
+                    <List.Item 
+                      key={item['id']} 
+                      index={index + 1} 
+                      onClick={() => selectTicket(item)}
+                      style={selectedTicket?.id === item['id'] ? {backgroundColor: 'lightskyblue'} : {}}
+                    >
+                      <FlexboxGrid>
+                        <FlexboxGrid.Item colspan={4} style={{...styleCenter, fontSize: 60, float:'left', width: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom:'auto'}}>
+                          {cloneElement(icons[item['type'] as keyof typeof icons], {})}
+                        </FlexboxGrid.Item>
+                        <FlexboxGrid.Item
+                          colspan={18}
+                          style={{
+                            ...styleCenter,
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <div style={titleStyle}>#{item['id']} {item['topic']}</div>
+                          {typeTags[item['type'] as keyof typeof icons]}
+
+                          <div style={{display: 'block', alignItems: 'left', justifyContent: 'left'}}>
+                          {/* TODO: The Calendar Icon and User Circle Icon do not align properly column wise*/}
+                            
+                            <FlexboxGrid>
+                              <FlexboxGrid.Item colspan={24} style={{textAlign:'left'}}>
+                                <CalendarIcon /> 
+                                {' ' + item['dateCreated'].toDateString()}
+                              </FlexboxGrid.Item>
+                              <FlexboxGrid.Item colspan={24} style={{textAlign:'left'}}>
+                                <UserCircleIcon /> 
+                                {' ' + item['assignedTo']}
+                              </FlexboxGrid.Item>
+                            </FlexboxGrid>
                           </div>
-                          <div>{item['dateCreated'].toDateString()}</div>
-                        </div>
-                      </FlexboxGrid.Item>
-                    </FlexboxGrid>
-                  </List.Item>
-                ))}
-              </List>
+                        </FlexboxGrid.Item>
+                      </FlexboxGrid>
+                    </List.Item>
+                  ))}
+                </List>
             }
 
             {
