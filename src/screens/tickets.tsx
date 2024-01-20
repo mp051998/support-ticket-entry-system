@@ -10,8 +10,12 @@ import RemindOutlineIcon from '@rsuite/icons/RemindOutline';
 import SearchIcon from '@rsuite/icons/Search';
 import SendIcon from '@rsuite/icons/Send';
 import { Ticket } from '../interfaces/ticket';
+import { TypeAttributes } from 'rsuite/esm/@types/common';
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircleO';
 import { UserContext } from '../App';
+import { capitalizeFirstLetter } from '../utils/stringTransformers';
+
+const tagStyle = { display: 'inline-block', width: 'fit-content' };
 
 const icons = {
   'bug': <DangerIcon/>,
@@ -20,24 +24,34 @@ const icons = {
   'issue': <RemindOutlineIcon />
 };
 
-const statusTags = {
-  'New': <Tag color='green' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>New</Tag>,
-  'Assigned': <Tag color='orange' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>Assigned</Tag>,
-  'Resolved': <Tag color='cyan' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>Resolved</Tag>
+interface TagProperties {
+  color: TypeAttributes.Color;
+}
+
+const tags = {
+  severity: {
+    low: {color: 'green'} as TagProperties,
+    medium: {color: 'orange'} as TagProperties,
+    high: {color: 'red'} as TagProperties
+  },
+  status: {
+    new: {color: 'green'} as TagProperties,
+    assigned: {color: 'orange'} as TagProperties,
+    resolved: {color: 'cyan'} as TagProperties
+  },
+  type: {
+    bug: {color: 'red'} as TagProperties,
+    enhancement: {color: 'cyan'} as TagProperties,
+    feature: {color: 'green'} as TagProperties,
+    issue: {color: 'orange'} as TagProperties
+  }
 };
 
-const severityTags = {
-  'Low': <Tag color='green' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>Low</Tag>,
-  'Medium': <Tag color='orange' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>Medium</Tag>,
-  'High': <Tag color='red' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>High</Tag>
-};
-
-const typeTags = {
-  'bug': <Tag color='red' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>Bug</Tag>,
-  'enhancement': <Tag color='cyan' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>Enhancement</Tag>,
-  'feature': <Tag color='green' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>Feature</Tag>,
-  'issue': <Tag color='orange' size='lg' style={{ display: 'inline-block', width: 'fit-content' }}>Issue</Tag>
-};
+function getTag(tagType: string, tagKey: string, tagSize: string) {
+  const tagData:TagProperties = tags[tagType as keyof typeof tags][tagKey as keyof typeof tags[keyof typeof tags]];
+  const color = tagData?.color;
+  return <Tag color={color} size={tagSize as any} style={tagStyle}>{capitalizeFirstLetter(tagKey)}</Tag>
+}
 
 // Using dummy data till backend is ready
 const data = [
@@ -46,10 +60,10 @@ const data = [
     topic: "Bug Report",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     dateCreated: new Date("2022-01-01"),
-    severity: "High",
+    severity: "high",
     type: "bug",
     assignedTo: "support-agent-1",
-    status: "New",
+    status: "new",
     resolvedOn: null,
     comments: [
       {
@@ -84,10 +98,10 @@ const data = [
     topic: "Feature Request",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     dateCreated: new Date("2022-01-02"),
-    severity: "Low",
+    severity: "low",
     type: "feature",
     assignedTo: "support-agent-2",
-    status: "Assigned",
+    status: "assigned",
     resolvedOn: null,
     comments: [
       {
@@ -122,10 +136,10 @@ const data = [
     topic: "Performance Issue",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     dateCreated: new Date("2022-01-03"),
-    severity: "Medium",
+    severity: "medium",
     type: "issue",
     assignedTo: "support-agent-3",
-    status: "Resolved",
+    status: "resolved",
     resolvedOn: new Date("2022-01-05"),
     comments: [
       {
@@ -160,10 +174,10 @@ const data = [
     topic: "UI Enhancement",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-06"),
-    severity: "Low",
+    severity: "low",
     type: "enhancement",
     assignedTo: "support-agent-4",
-    status: "New",
+    status: "new",
     resolvedOn: null,
     comments: [
       {
@@ -198,10 +212,10 @@ const data = [
     topic: "Data Import Error",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-07"),
-    severity: "Medium",
+    severity: "medium",
     type: "bug",
     assignedTo: "support-agent-5",
-    status: "Assigned",
+    status: "assigned",
     resolvedOn: null,
     comments: [
       {
@@ -236,10 +250,10 @@ const data = [
     topic: "Login Issue",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-08"),
-    severity: "High",
+    severity: "high",
     type: "issue",
     assignedTo: "support-agent-6",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -247,10 +261,10 @@ const data = [
     topic: "Feature Enhancement",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-09"),
-    severity: "Medium",
+    severity: "medium",
     type: "feature",
     assignedTo: "support-agent-7",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -258,10 +272,10 @@ const data = [
     topic: "Performance Optimization",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-10"),
-    severity: "High",
+    severity: "high",
     type: "issue",
     assignedTo: "support-agent-8",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -269,10 +283,10 @@ const data = [
     topic: "Data Export Error",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-11"),
-    severity: "Low",
+    severity: "low",
     type: "bug",
     assignedTo: "support-agent-9",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -280,10 +294,10 @@ const data = [
     topic: "Feature Request",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-12"),
-    severity: "Medium",
+    severity: "medium",
     type: "feature",
     assignedTo: "support-agent-10",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -291,10 +305,10 @@ const data = [
     topic: "Bug Report",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-13"),
-    severity: "High",
+    severity: "high",
     type: "bug",
     assignedTo: "support-agent-11",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -302,10 +316,10 @@ const data = [
     topic: "Performance Issue",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-14"),
-    severity: "Medium",
+    severity: "medium",
     type: "issue",
     assignedTo: "support-agent-12",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -313,10 +327,10 @@ const data = [
     topic: "UI Enhancement",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-15"),
-    severity: "Low",
+    severity: "low",
     type: "enhancement",
     assignedTo: "support-agent-13",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -324,10 +338,10 @@ const data = [
     topic: "Bug Report",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-16"),
-    severity: "High",
+    severity: "high",
     type: "bug",
     assignedTo: "support-agent-14",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -335,10 +349,10 @@ const data = [
     topic: "Feature Request",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-17"),
-    severity: "Low",
+    severity: "low",
     type: "feature",
     assignedTo: "support-agent-15",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
   {
@@ -346,15 +360,13 @@ const data = [
     topic: "Performance Issue",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     dateCreated: new Date("2022-01-18"),
-    severity: "Medium",
+    severity: "medium",
     type: "issue",
     assignedTo: "support-agent-16",
-    status: "New",
+    status: "new",
     resolvedOn: null
   },
 ];
-
-
 
 const styleCenter = {
   display: 'flex',
@@ -374,7 +386,7 @@ const titleStyle = {
   paddingBottom: 5,
   whiteSpace: 'nowrap',
   fontWeight: 1000,
-  fontSize: '1.3em',
+  fontSize: '1em',
 };
 
 // TODO: These heights and widths are not properly responsive, fix that
@@ -393,15 +405,11 @@ const portraitStyle = {
 function Tickets() {
 
   const appContext = useContext(UserContext);
-  console.log("App context is: ", appContext);
-  
-  console.log("Orientation of tickets is: ", appContext.orientation);
 
   const [style, setStyle] = useState(landscapeStyle);
   const [selectedTicket, setSelectedTicket] = useState<Ticket>();
   const [comment, setComment] = useState('');
-
-  // const style = appContext.orientation === 'landscape' ? landscapeStyle : portraitStyle;
+  
   useEffect(() => {
     console.log("Orientation changed to: ", appContext.orientation);
     if (appContext.orientation === 'landscape') {
@@ -467,7 +475,7 @@ function Tickets() {
                     style={selectedTicket?.id === item['id'] ? {backgroundColor: 'lightskyblue'} : {}}
                   >
                     <FlexboxGrid>
-                      <FlexboxGrid.Item colspan={4} style={{...styleCenter, fontSize: 60, float:'left', width: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom:'auto'}}>
+                      <FlexboxGrid.Item colspan={4} style={{...styleCenter, fontSize: 45, float:'left', width: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom:'auto'}}>
                         {cloneElement(icons[item['type'] as keyof typeof icons], {
                           style: {
                             // color: 'darkgrey',
@@ -482,15 +490,16 @@ function Tickets() {
                           flexDirection: 'column',
                           alignItems: 'flex-start',
                           overflow: 'hidden',
-                          // marginLeft: '0.01rem'
                         }}
                       >
                         <div style={titleStyle}>#{item['id']} {item['topic']}</div>
-                        {/* <div style={{...slimText, fontSize: '1em'}}>{item['type']}</div> */}
-                        {/* <div style={{...slimText, fontSize: '0.9em'}}> */}
-                        {typeTags[item['type'] as keyof typeof icons]}
+                        <div style={{display: 'flex', alignItems: 'center', marginBottom:'0.25rem'}}>
+                          {getTag('status', item.status, 'sm')}
+                          {getTag('severity', item.severity, 'sm')}
+                          {getTag('type', item.type, 'sm')}
+                        </div>
 
-                        <div style={{display: 'block', alignItems: 'left', justifyContent: 'left'}}>
+                        <div style={{display: 'block', alignItems: 'left', justifyContent: 'left', fontSize: '0.7em'}}>
                         {/* TODO: The Calendar Icon and User Circle Icon do not align properly column wise*/}
                           
                           <FlexboxGrid>
@@ -515,18 +524,18 @@ function Tickets() {
               {
                 selectedTicket?.id && 
                   <Container style={{ textAlign: 'right', border: '1px solid lightgrey', borderRadius: '10px', padding: '1rem' }}>
-                    <h3 style={{ textAlign: 'left', display: 'block', marginBottom:'0.5rem' }}>#{selectedTicket.id} {selectedTicket.topic}</h3>
+                    <h5 style={{ textAlign: 'left', display: 'block', marginBottom:'0.5rem' }}>#{selectedTicket.id} {selectedTicket.topic}</h5>
                     
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom:'1rem' }}>
-                      {statusTags[selectedTicket.status as keyof typeof statusTags]}
-                      {severityTags[selectedTicket.severity as keyof typeof severityTags]}
-                      {typeTags[selectedTicket.type as keyof typeof typeTags]}
+                      {getTag('status', selectedTicket.status, 'md')}
+                      {getTag('severity', selectedTicket.severity, 'md')}
+                      {getTag('type', selectedTicket.type, 'md')}
                     </div>
                     
-                    <p style={{ textAlign: 'left', fontSize: 16 }}>{selectedTicket.description}</p>
+                    <p style={{ textAlign: 'left', fontSize: '0.8em' }}>{selectedTicket.description}</p>
                     <hr/>
 
-                    <h4 style={{textAlign:'left', 'marginBottom': '0.5rem'}}>Comments</h4>
+                    <h5 style={{textAlign:'left', 'marginBottom': '0.5rem'}}>Comments</h5>
                     
                     { 
                       selectedTicket?.comments &&
@@ -538,22 +547,36 @@ function Tickets() {
                                   <UserCircleIcon style={{ color: 'darkgrey', fontSize: '1.5em' }} />
                                 </FlexboxGrid.Item>
                                 <FlexboxGrid.Item
-                                  colspan={18}
+                                  colspan={21}
                                   style={{
-                                    ...styleCenter,
+                                    display: 'block',
                                     flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                    overflow: 'hidden',
+                                    alignItems: 'left',
+                                    textAlign: 'left'
+                                  }}
+                                >
+                                  <div style={{
                                     border: '1px solid lightgrey',
                                     borderRadius: '4px',
                                     padding: '8px',
-                                  }}
-                                >
-                                  <div style={titleStyle}>{comment.user}</div>
-                                  <div style={slimText}>{comment.message}</div>
-                                </FlexboxGrid.Item>
-                                <FlexboxGrid.Item  colspan={3} style={{display:'flex', alignItems: 'flex-bottom', marginLeft:'0.5rem'}}>
-                                  <div style={slimText}>{comment.sentAt.toDateString()}</div>
+                                    maxWidth: '100%', // Set the maximum width to 100%
+                                    width: 'fit-content', // Set the width to fit the content
+                                  }}>
+                                    <div style={{fontSize:'0.9em', marginBottom:'0.1rem'}}>{comment.message}</div>
+                                    {/* TODO: Add support to show active user's messages on the RHS */}
+                                    <div style={{}}>
+                                      <FlexboxGrid style={slimText}>
+                                        <FlexboxGrid.Item colspan={12} style={{textAlign:'left'}}>
+                                          {comment.user}
+                                        </FlexboxGrid.Item>
+                                        <FlexboxGrid.Item colspan={12} style={{textAlign:'right'}}>
+                                          {comment.sentAt.toDateString()}
+                                        </FlexboxGrid.Item>
+                                      </FlexboxGrid>
+                                    </div>
+                                      
+                                  </div>
+                                  
                                 </FlexboxGrid.Item>
                                 <FlexboxGrid.Item colspan={1}>
 
@@ -567,7 +590,7 @@ function Tickets() {
                     {
                       (selectedTicket?.id && !selectedTicket?.comments) &&
                         <div>
-                          <h5 style={{textAlign:'center'}}>No comments yet.</h5>
+                          <h6 style={{textAlign:'center'}}>No comments yet.</h6>
                         </div>
                     }
 
@@ -584,26 +607,26 @@ function Tickets() {
             
             <FlexboxGrid.Item colspan={4} style={{display:'block'}}>
               { selectedTicket?.id &&
-                <List style={{display:'block', textAlign:'left', }} hover bordered={true}>
+                <List style={{display:'block', textAlign:'left' }} hover bordered={true}>
                   <List.Item>
-                    <h5>Assignees</h5>
+                    <h6>Assignees</h6>
                     {selectedTicket?.assignedTo}
                   </List.Item>
                   <List.Item>
-                    <h5>Created</h5>
+                    <h6>Created</h6>
                     {selectedTicket?.dateCreated.toDateString()}
                   </List.Item>
                   <List.Item>
-                    <h5>Type</h5>
-                    {selectedTicket?.type}
+                    <h6>Type</h6>
+                    {capitalizeFirstLetter(selectedTicket?.type)}
                   </List.Item>
                   <List.Item>
-                    <h5>Severity</h5>
-                    {selectedTicket?.severity}
+                    <h6>Severity</h6>
+                    {capitalizeFirstLetter(selectedTicket?.severity)}
                   </List.Item>
                   <List.Item>
-                    <h5>Status</h5>
-                    {selectedTicket?.status}
+                    <h6>Status</h6>
+                    {capitalizeFirstLetter(selectedTicket?.status)}
                   </List.Item>
 
                 </List>
@@ -641,7 +664,11 @@ function Tickets() {
                           }}
                         >
                           <div style={titleStyle}>#{item['id']} {item['topic']}</div>
-                          {typeTags[item['type'] as keyof typeof icons]}
+                          <div style={{display: 'flex', alignItems: 'center', marginBottom:'0.25rem'}}>
+                            {getTag('status', item.status, 'sm')}
+                            {getTag('severity', item.severity, 'sm')}
+                            {getTag('type', item.type, 'sm')}
+                          </div>
 
                           <div style={{display: 'block', alignItems: 'left', justifyContent: 'left'}}>
                           {/* TODO: The Calendar Icon and User Circle Icon do not align properly column wise*/}
@@ -673,16 +700,16 @@ function Tickets() {
                       <h3 style={{ textAlign: 'left', display: 'inline-block', marginBottom: '0.5rem' }}>#{selectedTicket.id} {selectedTicket.topic}</h3>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom:'1rem' }}>
-                      {statusTags[selectedTicket.status as keyof typeof statusTags]}
-                      {severityTags[selectedTicket.severity as keyof typeof severityTags]}
-                      {typeTags[selectedTicket.type as keyof typeof typeTags]}
+                      {getTag('status', selectedTicket.status, 'md')}
+                      {getTag('severity', selectedTicket.severity, 'md')}
+                      {getTag('type', selectedTicket.type, 'md')}
                     </div>
                     
                     <p style={{ textAlign: 'left', fontSize: 16 }}>{selectedTicket.description}</p>
                     <hr/>
 
                     <div>
-                      <h4 style={{textAlign:'left', marginBottom:'0.5rem'}}>Comments</h4>
+                      <h5 style={{textAlign:'left', marginBottom:'0.5rem'}}>Comments</h5>
                       { selectedTicket?.comments &&
                         <List style={{ overflow: 'auto', maxHeight: '40vh' }}>
                           {selectedTicket.comments.map((comment, index) => (
@@ -692,23 +719,36 @@ function Tickets() {
                                   <UserCircleIcon style={{ color: 'darkgrey', fontSize: '1.5em' }} />
                                 </FlexboxGrid.Item>
                                 <FlexboxGrid.Item
-                                  colspan={18}
+                                  colspan={21}
                                   style={{
-                                    ...styleCenter,
+                                    display: 'block',
                                     flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                    overflow: 'hidden',
+                                    alignItems: 'left',
+                                    textAlign: 'left',
+                                  }}
+                                >
+                                  <div style={{
                                     border: '1px solid lightgrey',
                                     borderRadius: '4px',
                                     padding: '8px',
-                                  }}
-                                >
-                                  <div style={titleStyle}>{comment.user}</div>
-                                  {/* <div style={slimText}>{comment.sentAt.toDateString()}</div> */}
-                                  <div style={slimText}>{comment.message}</div>
-                                </FlexboxGrid.Item>
-                                <FlexboxGrid.Item  colspan={3} style={{display:'flex', alignItems: 'flex-bottom', marginLeft:'0.5rem'}}>
-                                  <div style={slimText}>{comment.sentAt.toDateString()}</div>
+                                    maxWidth: '100%', // Set the maximum width to 100%
+                                    width: 'fit-content', // Set the width to fit the content
+                                  }}>
+                                    <div style={{fontSize:'0.9em', marginBottom:'0.1rem'}}>{comment.message}</div>
+                                    {/* TODO: Add support to show active user's messages on the RHS */}
+                                    <div style={{}}>
+                                      <FlexboxGrid style={slimText}>
+                                        <FlexboxGrid.Item colspan={12} style={{textAlign:'left'}}>
+                                          {comment.user}
+                                        </FlexboxGrid.Item>
+                                        <FlexboxGrid.Item colspan={12} style={{textAlign:'right'}}>
+                                          {comment.sentAt.toDateString()}
+                                        </FlexboxGrid.Item>
+                                      </FlexboxGrid>
+                                    </div>
+                                      
+                                  </div>
+                                  
                                 </FlexboxGrid.Item>
                                 <FlexboxGrid.Item colspan={1}>
 
@@ -738,23 +778,23 @@ function Tickets() {
                 <h4 style={{marginBottom:'0.5rem'}}>Info</h4>
                 <List style={{display:'block'}} hover bordered={true}>
                   <List.Item>
-                    <h5>Assignees</h5>
+                    <h6>Assignees</h6>
                     {selectedTicket?.assignedTo}
                   </List.Item>
                   <List.Item>
-                    <h5>Created</h5>
+                    <h6>Created</h6>
                     {selectedTicket?.dateCreated.toDateString()}
                   </List.Item>
                   <List.Item>
-                    <h5>Type</h5>
+                    <h6>Type</h6>
                     {selectedTicket?.type}
                   </List.Item>
                   <List.Item>
-                    <h5>Severity</h5>
+                    <h6>Severity</h6>
                     {selectedTicket?.severity}
                   </List.Item>
                   <List.Item>
-                    <h5>Status</h5>
+                    <h6>Status</h6>
                     {selectedTicket?.status}
                   </List.Item>
 
