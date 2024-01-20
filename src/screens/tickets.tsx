@@ -609,7 +609,7 @@ function Tickets() {
               { selectedTicket?.id &&
                 <List style={{display:'block', textAlign:'left' }} hover bordered={true}>
                   <List.Item>
-                    <h6>Assignees</h6>
+                    <h6>Assigned To</h6>
                     {selectedTicket?.assignedTo}
                   </List.Item>
                   <List.Item>
@@ -778,7 +778,7 @@ function Tickets() {
                 <h4 style={{marginBottom:'0.5rem'}}>Info</h4>
                 <List style={{display:'block'}} hover bordered={true}>
                   <List.Item>
-                    <h6>Assignees</h6>
+                    <h6>Assigned To</h6>
                     {selectedTicket?.assignedTo}
                   </List.Item>
                   <List.Item>
