@@ -9,7 +9,6 @@ import Agents from './screens/agents';
 import DashboardIcon from '@rsuite/icons/legacy/Dashboard';
 import GroupIcon from '@rsuite/icons/legacy/Group';
 import Tickets from './screens/tickets';
-import { ToastContainer } from 'react-toastify';
 
 export const UserContext = createContext({ 
   orientation: 'landscape',
@@ -171,7 +170,6 @@ function App() {
           setActiveAgent: setActiveAgent as Dispatch<SetStateAction<Agent>>,
           setShowLoader: setShowLoader as Dispatch<SetStateAction<boolean>>
         }}>
-        <ToastContainer />
         {renderView()}
       </UserContext.Provider>
     </div>
