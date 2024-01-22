@@ -46,11 +46,19 @@ const filters = [
   {
     value: 'severity',
     label: 'Severity',
-    multiple: false,
     children: [
       {label: 'Low', value: 'low'},
       {label: 'Medium', value: 'medium'},
       {label: 'High', value: 'high'}
+    ]
+  },
+  {
+    value: 'status',
+    label: 'Status',
+    children: [
+      {label: 'New', value: 'new'},
+      {label: 'Assigned', value: 'assigned'},
+      {label: 'Closed', value: 'closed'}
     ]
   },
   {
@@ -67,9 +75,11 @@ const filters = [
 
 const defaultFiltersForm = {
   severity: [],
+  status: [],
   type: []
 } as {
   severity: string[],
+  status: string[],
   type: string[]
 };
 
@@ -184,7 +194,7 @@ function Tickets() {
   // Get the tickets from the express server
   // TODO: Make this call and integrate the list with this data
   useEffect(() => {
-    TicketsService.getTickets([], filtersForm.severity, activePage, perPage).then((response) => {
+    TicketsService.getTickets(filtersForm.severity, filtersForm.status, filtersForm.type, activePage, perPage).then((response) => {
       console.log("Tickets: ", response);
       setTickets(response?.data);
       setTotalTicketsCount(response?.meta?.count);
@@ -326,6 +336,7 @@ function Tickets() {
     console.log("Cascade clean: ", event);
     setFiltersForm(prevForm => ({
       severity: [],
+      status: [],
       type: []
     }));
   }
