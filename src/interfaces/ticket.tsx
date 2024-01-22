@@ -9,12 +9,20 @@ export interface Ticket {
   id: number;
   topic: string;
   description: string;
-  dateCreated: Date;
+  createdAt: number;
+  updatedAt: number;
   severity: string;
   type: string;
-  assignedTo: string;
+  assignedTo: {
+    id: number;
+    name: string;
+  }
+  autoAssignedTo: {
+    id: number;
+    name: string;
+  }
+  autoAssignedAt: number,
   status: string;
-  resolvedOn: Date | null;
   comments: Comment[];
 }
 
