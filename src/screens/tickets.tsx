@@ -1,5 +1,5 @@
-import { Button, Container, FlexboxGrid, IconButton, Input, InputGroup, List, Tag } from 'rsuite';
-import { cloneElement, useContext, useEffect, useState } from 'react';
+import { Button, Container, FlexboxGrid, Form, IconButton, Input, InputGroup, List, Modal, Notification, Pagination, SelectPicker, Tag, toaster } from 'rsuite';
+import { Ref, cloneElement, forwardRef, useContext, useEffect, useState } from 'react';
 
 import CalendarIcon from '@rsuite/icons/Calendar';
 import CreativeIcon from '@rsuite/icons/Creative';
@@ -10,10 +10,14 @@ import RemindOutlineIcon from '@rsuite/icons/RemindOutline';
 import SearchIcon from '@rsuite/icons/Search';
 import SendIcon from '@rsuite/icons/Send';
 import { Ticket } from '../interfaces/ticket';
+import TicketsService from '../services/tickets';
 import { TypeAttributes } from 'rsuite/esm/@types/common';
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircleO';
 import { UserContext } from '../App';
 import { capitalizeFirstLetter } from '../utils/stringTransformers';
+
+// Accepters for rsuite components
+const Textarea = forwardRef((props, ref: Ref<HTMLTextAreaElement>) => <Input {...props} as="textarea" ref={ref} />);
 
 const tagStyle = { display: 'inline-block', width: 'fit-content' };
 
@@ -23,6 +27,20 @@ const icons = {
   'feature': <PlusRoundIcon />,
   'issue': <RemindOutlineIcon />
 };
+
+const severities = [
+  {label: 'Low', value: 'low'},
+  {label: 'Medium', value: 'medium'},
+  {label: 'High', value: 'high'}
+];
+
+const ticketTypes = [
+  {label: 'Bug', value: 'bug'},
+  {label: 'Enhancement', value: 'enhancement'},
+  {label: 'Feature', value: 'feature'},
+  {label: 'Issue', value: 'issue'}
+];
+
 
 interface TagProperties {
   color: TypeAttributes.Color;
@@ -391,7 +409,7 @@ const titleStyle = {
 
 // TODO: These heights and widths are not properly responsive, fix that
 const landscapeStyle = {
-  height: '65vh',
+  height: '62vh',
   // width: '20vw',
   // overflow: 'hidden'
 }
@@ -407,8 +425,23 @@ function Tickets() {
   const appContext = useContext(UserContext);
 
   const [style, setStyle] = useState(landscapeStyle);
+  const [activePage, setActivePage] = useState(1);
   const [selectedTicket, setSelectedTicket] = useState<Ticket>();
   const [comment, setComment] = useState('');
+
+  const [createTicketModalOpen, setCreateTicketModalOpen] = useState(false);
+  const [ticketData, setTicketData] = useState({
+    topic: '',
+    description: '',
+    severity: '',
+    type: ''
+  });
+  const [ticketFormErrors, setTicketFormErrors] = useState({
+    topic: '',
+    description: '',
+    severity: '',
+    type: ''
+  });
   
   useEffect(() => {
     console.log("Orientation changed to: ", appContext.orientation);
@@ -419,15 +452,101 @@ function Tickets() {
     }
   }, [appContext.orientation])
 
+  // Get the tickets from the express server
+  // TODO: Make this call and integrate the list with this data
+  useEffect(() => {
+    TicketsService.getTickets().then((response) => {
+      console.log("Tickets: ", response);
+    }, (err) => {
+      console.log(err);
+    });
+  }, []);
+
   function selectTicket(ticket:any) {
     console.log("Selected ticket: ", ticket);
     setSelectedTicket(ticket);
   }
-  
+
+  function openCreateTicketModal() {
+    setCreateTicketModalOpen(true);
+  }
+
+  function handleCloseCreateTicketModal() {
+    setCreateTicketModalOpen(false);
+  }
+
+  function handleTicketChange(name: string, value: string) {
+    setTicketData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  }
+
   function createTicket() {
-    // Open modal to create ticket
-    // TODO: Implement this
-    console.log("Clicked create ticket");
+    // Clear all errors
+    setTicketFormErrors({
+      topic: '',
+      description: '',
+      severity: '',
+      type: ''
+    });
+
+    let erred = false;
+    if (!ticketData.topic) {
+      setTicketFormErrors(prevErrors => ({
+        ...prevErrors,
+        topic: 'Topic is required'
+      }));
+      erred = true;
+    }
+    if (!ticketData.description) {
+      setTicketFormErrors(prevErrors => ({
+        ...prevErrors,
+        description: 'Description is required'
+      }));
+      erred = true;
+    }
+    if (!ticketData.severity) {
+      setTicketFormErrors(prevErrors => ({
+        ...prevErrors,
+        severity: 'Severity is required'
+      }));
+      erred = true;
+    }
+    if (!ticketData.type) {
+      setTicketFormErrors(prevErrors => ({
+        ...prevErrors,
+        type: 'Type is required'
+      }));
+      erred = true;
+    }
+
+    if (erred) {
+      return;
+    }
+
+    console.log("Creating ticket");
+
+    appContext.setShowLoader(true);
+    TicketsService.createTicket(ticketData.topic, ticketData.description, ticketData.severity, ticketData.type).then((response) => {
+      console.log("Ticket created: ", response);
+      handleCloseCreateTicketModal();
+      appContext.setShowLoader(false);
+      toaster.push(<Notification closable type='success' header='Ticket created successfully'/>, {
+        duration: 5000
+      });
+      // Flush the ticket data
+      setTicketData({
+        topic: '',
+        description: '',
+        severity: '',
+        type: ''
+      });
+    }, (err) => {
+      console.log(err);
+      appContext.setShowLoader(false);
+    });
+    
   }
 
   function sendComment() {
@@ -437,8 +556,76 @@ function Tickets() {
     // TODO: Implement this
   }
 
+
   return (
     <div style={{width: '100%'}}>
+      <Modal backdrop='static' open={createTicketModalOpen} onClose={handleCloseCreateTicketModal}>
+        <Modal.Header>
+          <h3>Create Ticket</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <Form fluid
+            formValue={ticketData}
+          >
+            <Form.Group>
+              <Form.ControlLabel>Topic</Form.ControlLabel>
+              <Form.Control
+                name="topic"
+                value={ticketData.topic}
+                onChange={(value) => handleTicketChange("topic", value)}
+                errorMessage={ticketFormErrors.topic}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>Description</Form.ControlLabel>
+              <Form.Control
+                accepter={Textarea}
+                // rows={5}
+                name="description"
+                value={ticketData.description}
+                onChange={(value) => handleTicketChange("description", value)}
+                errorMessage={ticketFormErrors.description}
+              />
+            </Form.Group>
+            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+              <Form.Group style={{ width: '40%', textAlign: 'left' }}>
+                <Form.ControlLabel>Severity</Form.ControlLabel>
+                <Form.Control
+                  accepter={SelectPicker}
+                  name="severity"
+                  value={ticketData.severity}
+                  data={severities}
+                  searchable={false}
+                  onChange={(value) => handleTicketChange("severity", value)}
+                  errorMessage={ticketFormErrors.severity}
+                  block // Add the block prop to use all available width
+                />
+              </Form.Group>
+              <Form.Group style={{ width: '40%', textAlign: 'left' }}>
+                <Form.ControlLabel>Type</Form.ControlLabel>
+                <Form.Control
+                  accepter={SelectPicker}
+                  name="type"
+                  data={ticketTypes}
+                  value={ticketData.type}
+                  searchable={false}
+                  onChange={(value) => handleTicketChange("type", value)}
+                  errorMessage={ticketFormErrors.type}
+                  block // Add the block prop to use all available width
+                />
+              </Form.Group>
+            </div>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleCloseCreateTicketModal} appearance="subtle">
+            Cancel
+          </Button>
+          <Button onClick={createTicket} appearance="primary">
+            Ok
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {
         (appContext.orientation === 'landscape' || !selectedTicket) &&
           <div 
@@ -449,7 +636,7 @@ function Tickets() {
               width: '100%'
             }}>
             <h2 style={{ textAlign: 'left', margin: 0 }}>Tickets</h2>
-            <Button appearance="primary" style={{margin:'10px'}} onClick={createTicket}>Create Ticket</Button>
+            <Button appearance="primary" style={{margin:'10px'}} onClick={openCreateTicketModal}>Create Ticket</Button>
           </div>
       }
 
@@ -518,6 +705,29 @@ function Tickets() {
                   </List.Item>
                 ))}
               </List>
+              <div style={{display:'flex', justifyContent:'center', marginTop:'0.5rem'}}>
+              <Pagination 
+                prev 
+                next
+                first
+                last
+                total={100} 
+                limit={10} 
+                activePage={activePage} 
+                onChangePage={setActivePage}
+                maxButtons={4}
+              />
+              <span style={{fontSize: 12, margin:'auto'}}>Per Page</span>
+              <SelectPicker
+                value={0}
+                onChange={() => {}}
+                cleanable={false}
+                searchable={false}
+                data = {[{value: 0, label: 0}]}
+                size='sm'
+                placement='topEnd'
+              />
+              </div>
             </FlexboxGrid.Item>
         
             <FlexboxGrid.Item colspan={13} style={{display:'flex', }}>
@@ -603,6 +813,18 @@ function Tickets() {
 
                   </Container>
               }
+              {
+                !selectedTicket?.id &&
+                  /* TODO: Add a placeholder screen with useful info/statistics maybe. Otherwise there is too 
+                        much empty space till a ticket is selected.
+                  */
+                  
+                  <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                    <h4>Please create a ticket or select a ticket to view</h4>
+                  </div>
+              }
+
+              
             </FlexboxGrid.Item>
             
             <FlexboxGrid.Item colspan={4} style={{display:'block'}}>
