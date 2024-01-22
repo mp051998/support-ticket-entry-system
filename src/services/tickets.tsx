@@ -4,7 +4,7 @@ class TicketsService {
   /**
    * 
    * @param ticketID ID of the ticket to get
-   * @returns 
+   * @returns Promise with the ticket data
    */
   static getTicketByID (ticketID: number) {
     const route = `/tickets/${ticketID}`;
@@ -18,7 +18,7 @@ class TicketsService {
    * @param ticketType List of ticketType values to filter by
    * @param page Page number
    * @param size Number of tickets per page
-   * @returns 
+   * @returns Promise with the list of tickets
    */
   static getTickets (severity: string[]=[], status:string[]=[], ticketType: string[]=[], page: number=1, size:number=10) {
     const route = `/tickets?severity=${severity.join(',')}&status=${status.join(',')}&ticketType=${ticketType.join(',')}&page=${page}&size=${size}`;
@@ -31,7 +31,7 @@ class TicketsService {
    * @param description Short description of the ticket
    * @param severity Severity of the ticket
    * @param ticketType Type of the ticket
-   * @returns 
+   * @returns Promise with the ticket data / error
    */
   static createTicket (topic: string, description: string, severity: string, ticketType:string) {
     const requestData = {
