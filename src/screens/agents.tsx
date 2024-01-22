@@ -194,7 +194,7 @@ const Agents = () => {
     <div>
       <Modal backdrop='static' open={createAgentModalOpen} onClose={handleCloseCreateAgentModal}>
         <Modal.Header>
-          <h3>Create Ticket</h3>
+          <h3>Create Agent</h3>
         </Modal.Header>
         <Modal.Body>
           <Form fluid
