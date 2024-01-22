@@ -20,8 +20,8 @@ class TicketsService {
    * @param size Number of tickets per page
    * @returns Promise with the list of tickets
    */
-  static getTickets (severity: string[]=[], status:string[]=[], ticketType: string[]=[], page: number=1, size:number=10) {
-    const route = `/tickets?severity=${severity.join(',')}&status=${status.join(',')}&ticketType=${ticketType.join(',')}&page=${page}&size=${size}`;
+  static getTickets (queryString: string='', severity: string[]=[], status:string[]=[], ticketType: string[]=[], page: number=1, size:number=10) {
+    const route = `/tickets?queryString=${queryString}&severity=${severity.join(',')}&status=${status.join(',')}&ticketType=${ticketType.join(',')}&page=${page}&size=${size}`;
     return getRequest(route);
   }
 

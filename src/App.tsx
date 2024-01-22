@@ -138,7 +138,7 @@ function App() {
               {
                 activeAgent?.id &&
                   <Nav pullRight>
-                    <Nav.Menu noCaret openDirection='end' 
+                    <Nav.Menu noCaret
                       title={
                         <div>
                           <img src={activeAgent.img} alt='user' style={{ width: '45px', height: '45px', borderRadius: '50%', marginRight: '0.5rem' }} />

@@ -166,6 +166,8 @@ function Tickets() {
   const [selectedTicket, setSelectedTicket] = useState<Ticket>();
   const [comment, setComment] = useState('');
 
+  const [queryString, setQueryString] = useState('');
+
   const [filtersForm, setFiltersForm] = useState(defaultFiltersForm);
 
   const [createTicketModalOpen, setCreateTicketModalOpen] = useState(false);
@@ -194,14 +196,14 @@ function Tickets() {
   // Get the tickets from the express server
   // TODO: Make this call and integrate the list with this data
   useEffect(() => {
-    TicketsService.getTickets(filtersForm.severity, filtersForm.status, filtersForm.type, activePage, perPage).then((response) => {
+    TicketsService.getTickets(queryString, filtersForm.severity, filtersForm.status, filtersForm.type, activePage, perPage).then((response) => {
       console.log("Tickets: ", response);
       setTickets(response?.data);
       setTotalTicketsCount(response?.meta?.count);
     }, (err) => {
       console.log(err);
     });
-  }, [perPage, activePage, filtersForm]);
+  }, [perPage, activePage, filtersForm, queryString]);
 
   function selectTicket(ticket:any) {
     console.log("Selected ticket: ", ticket);
@@ -434,7 +436,7 @@ function Tickets() {
           <FlexboxGrid justify='space-between'>
             <FlexboxGrid.Item colspan={6}>
               <InputGroup inside style={{marginBottom:'0.5rem'}}>
-                <Input />
+                <Input value={queryString} onChange={(value) => {setQueryString(value)}}/>
                 <InputGroup.Button>
                   <SearchIcon />
                 </InputGroup.Button>
@@ -688,7 +690,7 @@ function Tickets() {
               !selectedTicket?.id &&
                 <div>
                   <InputGroup inside style={{marginBottom:'0.5rem'}}>
-                    <Input />
+                    <Input value={queryString} onChange={(value) => {setQueryString(value)}}/>
                     <InputGroup.Button>
                       <SearchIcon />
                     </InputGroup.Button>
