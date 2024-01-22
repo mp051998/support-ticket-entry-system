@@ -270,7 +270,7 @@ function Tickets() {
 
 
   return (
-    <div style={{width: '100%'}}>
+    <div>
       <Modal backdrop='static' open={createTicketModalOpen} onClose={handleCloseCreateTicketModal}>
         <Modal.Header>
           <h3>Create Ticket</h3>
