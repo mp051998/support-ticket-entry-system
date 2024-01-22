@@ -72,320 +72,12 @@ function getTag(tagType: string, tagKey: string, tagSize: string) {
   return <Tag color={color} size={tagSize as any} style={tagStyle}>{capitalizeFirstLetter(tagKey)}</Tag>
 }
 
-// Using dummy data till backend is ready
-// const data = [
-//   {
-//     id: 1,
-//     topic: "Bug Report",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-//     dateCreated: new Date("2022-01-01"),
-//     severity: "high",
-//     type: "bug",
-//     assignedTo: "support-agent-1",
-//     status: "new",
-//     resolvedOn: null,
-//     comments: [
-//       {
-//         user: "user1",
-//         message: "This is the first comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user2",
-//         message: "This is the second comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user3",
-//         message: "This is the third comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user4",
-//         message: "This is the fourth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user1",
-//         message: "This is the fifth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       }
-//     ]
-//   },
-//   {
-//     id: 2,
-//     topic: "Feature Request",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-//     dateCreated: new Date("2022-01-02"),
-//     severity: "low",
-//     type: "feature",
-//     assignedTo: "support-agent-2",
-//     status: "assigned",
-//     resolvedOn: null,
-//     comments: [
-//       {
-//         user: "user1",
-//         message: "This is the first comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user2",
-//         message: "This is the second comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user3",
-//         message: "This is the third comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user4",
-//         message: "This is the fourth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user1",
-//         message: "This is the fifth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       }
-//     ]
-//   },
-//   {
-//     id: 3,
-//     topic: "Performance Issue",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-//     dateCreated: new Date("2022-01-03"),
-//     severity: "medium",
-//     type: "issue",
-//     assignedTo: "support-agent-3",
-//     status: "resolved",
-//     resolvedOn: new Date("2022-01-05"),
-//     comments: [
-//       {
-//         user: "user1",
-//         message: "This is the first comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user2",
-//         message: "This is the second comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user3",
-//         message: "This is the third comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user4",
-//         message: "This is the fourth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user1",
-//         message: "This is the fifth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       }
-//     ]
-//   },
-//   {
-//     id: 4,
-//     topic: "UI Enhancement",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-06"),
-//     severity: "low",
-//     type: "enhancement",
-//     assignedTo: "support-agent-4",
-//     status: "new",
-//     resolvedOn: null,
-//     comments: [
-//       {
-//         user: "user1",
-//         message: "This is the first comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user2",
-//         message: "This is the second comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user3",
-//         message: "This is the third comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user4",
-//         message: "This is the fourth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user1",
-//         message: "This is the fifth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       }
-//     ]
-//   },
-//   {
-//     id: 5,
-//     topic: "Data Import Error",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-07"),
-//     severity: "medium",
-//     type: "bug",
-//     assignedTo: "support-agent-5",
-//     status: "assigned",
-//     resolvedOn: null,
-//     comments: [
-//       {
-//         user: "user1",
-//         message: "This is the first comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user2",
-//         message: "This is the second comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user3",
-//         message: "This is the third comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user4",
-//         message: "This is the fourth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       },
-//       {
-//         user: "user1",
-//         message: "This is the fifth comment.",
-//         sentAt: new Date("2022-01-06T12:00:00Z")
-//       }
-//     ]
-//   },
-//   {
-//     id: 6,
-//     topic: "Login Issue",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-08"),
-//     severity: "high",
-//     type: "issue",
-//     assignedTo: "support-agent-6",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 7,
-//     topic: "Feature Enhancement",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-09"),
-//     severity: "medium",
-//     type: "feature",
-//     assignedTo: "support-agent-7",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 8,
-//     topic: "Performance Optimization",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-10"),
-//     severity: "high",
-//     type: "issue",
-//     assignedTo: "support-agent-8",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 9,
-//     topic: "Data Export Error",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-11"),
-//     severity: "low",
-//     type: "bug",
-//     assignedTo: "support-agent-9",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 10,
-//     topic: "Feature Request",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-12"),
-//     severity: "medium",
-//     type: "feature",
-//     assignedTo: "support-agent-10",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 11,
-//     topic: "Bug Report",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-13"),
-//     severity: "high",
-//     type: "bug",
-//     assignedTo: "support-agent-11",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 12,
-//     topic: "Performance Issue",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-14"),
-//     severity: "medium",
-//     type: "issue",
-//     assignedTo: "support-agent-12",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 13,
-//     topic: "UI Enhancement",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-15"),
-//     severity: "low",
-//     type: "enhancement",
-//     assignedTo: "support-agent-13",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 14,
-//     topic: "Bug Report",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-16"),
-//     severity: "high",
-//     type: "bug",
-//     assignedTo: "support-agent-14",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 15,
-//     topic: "Feature Request",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-17"),
-//     severity: "low",
-//     type: "feature",
-//     assignedTo: "support-agent-15",
-//     status: "new",
-//     resolvedOn: null
-//   },
-//   {
-//     id: 16,
-//     topic: "Performance Issue",
-//     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-//     dateCreated: new Date("2022-01-18"),
-//     severity: "medium",
-//     type: "issue",
-//     assignedTo: "support-agent-16",
-//     status: "new",
-//     resolvedOn: null
-//   },
-// ];
+const perPageOptions = [
+  {label: '1', value: 1},
+  {label: '10', value: 10},
+  {label: '20', value: 20},
+  {label: '30', value: 50},
+];
 
 const styleCenter = {
   display: 'flex',
@@ -428,6 +120,8 @@ function Tickets() {
   const [style, setStyle] = useState(landscapeStyle);
   const [activePage, setActivePage] = useState(1);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [totalTicketsCount, setTotalTicketsCount] = useState(0);
+  const [perPage, setPerPage] = useState(10);
   const [selectedTicket, setSelectedTicket] = useState<Ticket>();
   const [comment, setComment] = useState('');
 
@@ -457,13 +151,14 @@ function Tickets() {
   // Get the tickets from the express server
   // TODO: Make this call and integrate the list with this data
   useEffect(() => {
-    TicketsService.getTickets().then((response) => {
+    TicketsService.getTickets([], [], activePage, perPage).then((response) => {
       console.log("Tickets: ", response);
       setTickets(response?.data);
+      setTotalTicketsCount(response?.meta?.count);
     }, (err) => {
       console.log(err);
     });
-  }, []);
+  }, [perPage, activePage]);
 
   function selectTicket(ticket:any) {
     console.log("Selected ticket: ", ticket);
@@ -723,27 +418,32 @@ function Tickets() {
                 ))}
               </List>
               <div style={{display:'flex', justifyContent:'center', marginTop:'0.5rem'}}>
-              <Pagination 
-                prev 
-                next
-                first
-                last
-                total={100} 
-                limit={10} 
-                activePage={activePage} 
-                onChangePage={setActivePage}
-                maxButtons={4}
-              />
-              <span style={{fontSize: 12, margin:'auto'}}>Per Page</span>
-              <SelectPicker
-                value={0}
-                onChange={() => {}}
-                cleanable={false}
-                searchable={false}
-                data = {[{value: 0, label: 0}]}
-                size='sm'
-                placement='topEnd'
-              />
+                <Pagination 
+                  prev 
+                  next
+                  first
+                  last
+                  total={totalTicketsCount} 
+                  limit={perPage} 
+                  activePage={activePage} 
+                  onChangePage={setActivePage}
+                  maxButtons={4}
+                />
+                <div style={{justifyContent: 'right'}}>
+                  <span style={{fontSize: 12, justifyContent: 'right', marginRight:'0.5rem'}}>Per Page</span>
+                  <SelectPicker
+                    value={perPage}
+                    onChange={(value) => {
+                      if (value)
+                        setPerPage(value);
+                    }}
+                    cleanable={false}
+                    searchable={false}
+                    data = {perPageOptions}
+                    size='sm'
+                    placement='topEnd'
+                  />
+                </div>
               </div>
             </FlexboxGrid.Item>
         
