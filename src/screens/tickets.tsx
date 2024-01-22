@@ -1,4 +1,4 @@
-import { Button, Container, FlexboxGrid, Form, IconButton, Input, InputGroup, List, Modal, Notification, Pagination, SelectPicker, Tag, toaster } from 'rsuite';
+import { Button, Container, FlexboxGrid, Form, IconButton, Input, InputGroup, List, Modal, MultiCascader, Notification, Pagination, SelectPicker, Tag, toaster } from 'rsuite';
 import { Ref, cloneElement, forwardRef, useContext, useEffect, useState } from 'react';
 
 import CalendarIcon from '@rsuite/icons/Calendar';
@@ -41,6 +41,37 @@ const ticketTypes = [
   {label: 'Feature', value: 'feature'},
   {label: 'Issue', value: 'issue'}
 ];
+
+const filters = [
+  {
+    value: 'severity',
+    label: 'Severity',
+    multiple: false,
+    children: [
+      {label: 'Low', value: 'low'},
+      {label: 'Medium', value: 'medium'},
+      {label: 'High', value: 'high'}
+    ]
+  },
+  {
+    value: 'type',
+    label: 'Type',
+    children: [
+      {label: 'Bug', value: 'bug'},
+      {label: 'Enhancement', value: 'enhancement'},
+      {label: 'Feature', value: 'feature'},
+      {label: 'Issue', value: 'issue'}
+    ]
+  }
+]
+
+const defaultFiltersForm = {
+  severity: [],
+  type: []
+} as {
+  severity: string[],
+  type: string[]
+};
 
 
 interface TagProperties {
@@ -102,13 +133,13 @@ const titleStyle = {
 
 // TODO: These heights and widths are not properly responsive, fix that
 const landscapeStyle = {
-  height: '62vh',
+  height: '55vh',
   // width: '20vw',
   // overflow: 'hidden'
 }
 
 const portraitStyle = {
-  height: '75vh',
+  height: '65vh',
   width: '100%',
   // overflow: 'hidden'
 }
@@ -124,6 +155,8 @@ function Tickets() {
   const [perPage, setPerPage] = useState(10);
   const [selectedTicket, setSelectedTicket] = useState<Ticket>();
   const [comment, setComment] = useState('');
+
+  const [filtersForm, setFiltersForm] = useState(defaultFiltersForm);
 
   const [createTicketModalOpen, setCreateTicketModalOpen] = useState(false);
   const [ticketData, setTicketData] = useState({
@@ -151,14 +184,14 @@ function Tickets() {
   // Get the tickets from the express server
   // TODO: Make this call and integrate the list with this data
   useEffect(() => {
-    TicketsService.getTickets([], [], activePage, perPage).then((response) => {
+    TicketsService.getTickets([], filtersForm.severity, activePage, perPage).then((response) => {
       console.log("Tickets: ", response);
       setTickets(response?.data);
       setTotalTicketsCount(response?.meta?.count);
     }, (err) => {
       console.log(err);
     });
-  }, [perPage, activePage]);
+  }, [perPage, activePage, filtersForm]);
 
   function selectTicket(ticket:any) {
     console.log("Selected ticket: ", ticket);
@@ -268,6 +301,36 @@ function Tickets() {
     // TODO: Implement this
   }
 
+  // Filters cascade related
+  function handleCascadeCheck(value:any, item:any, checked:boolean) {
+    const filterParent = item.parent?.value as keyof typeof defaultFiltersForm;
+    const filterChild = item.value;
+    
+    setFiltersForm(prevForm => {
+      let newForm = {...prevForm};
+      if (checked) {
+        if (!prevForm[filterParent].includes(filterChild)) {
+          newForm[filterParent].push(filterChild);
+        }
+      } else {
+        const index = prevForm[filterParent].indexOf(filterChild);
+        if (index !== -1) {
+          newForm[filterParent].splice(index, 1);
+        }
+      }
+      return newForm;
+    });
+  }
+
+  function handleCascadeClean(event:any) {
+    console.log("Cascade clean: ", event);
+    setFiltersForm(prevForm => ({
+      severity: [],
+      type: []
+    }));
+  }
+
+
 
   return (
     <div>
@@ -359,12 +422,28 @@ function Tickets() {
         <div>
           <FlexboxGrid justify='space-between'>
             <FlexboxGrid.Item colspan={6}>
-              <InputGroup inside style={{marginBottom:'1rem'}}>
+              <InputGroup inside style={{marginBottom:'0.5rem'}}>
                 <Input />
                 <InputGroup.Button>
                   <SearchIcon />
                 </InputGroup.Button>
               </InputGroup>
+              <div style={{marginBottom:'0.5rem', display:'flex', justifyContent: 'right', alignItems:'center'}}>
+                <MultiCascader 
+                  labelKey='label'
+                  cascade={false}
+                  searchable={false} 
+                  appearance='default' 
+                  data={filters} 
+                  placeholder='Filters' 
+                  style={{width:'80%'}}
+                  onClean={handleCascadeClean}
+                  onCheck={handleCascadeCheck}
+                  menuHeight='auto'
+                />
+                <Button style={{ marginLeft: '0.5rem', width:'20%'}}>Sort By</Button>
+              </div>
+              
               <List bordered style={style} hover autoScroll={true}>
                 {tickets.map((item:Ticket, index) => (
                   <List.Item 
@@ -596,53 +675,104 @@ function Tickets() {
           <div>
             {
               !selectedTicket?.id &&
-                <List bordered style={style} hover>
-                  {tickets.map((item:Ticket, index) => (
-                    <List.Item 
-                      key={item['id']} 
-                      index={index + 1} 
-                      onClick={() => selectTicket(item)}
-                      style={selectedTicket?.id === item['id'] ? {backgroundColor: 'lightskyblue'} : {}}
-                    >
-                      <FlexboxGrid>
-                        <FlexboxGrid.Item colspan={4} style={{...styleCenter, fontSize: 60, float:'left', width: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom:'auto'}}>
-                          {cloneElement(icons[item.type as keyof typeof icons], {})}
-                        </FlexboxGrid.Item>
-                        <FlexboxGrid.Item
-                          colspan={18}
-                          style={{
-                            ...styleCenter,
-                            flexDirection: 'column',
-                            alignItems: 'flex-start',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <div style={titleStyle}>#{item['id']} {item['topic']}</div>
-                          <div style={{display: 'flex', alignItems: 'center', marginBottom:'0.25rem'}}>
-                            {getTag('status', item.status, 'sm')}
-                            {getTag('severity', item.severity, 'sm')}
-                            {getTag('type', item.type, 'sm')}
-                          </div>
+                <div>
+                  <InputGroup inside style={{marginBottom:'0.5rem'}}>
+                    <Input />
+                    <InputGroup.Button>
+                      <SearchIcon />
+                    </InputGroup.Button>
+                  </InputGroup>
+                  <div style={{marginBottom:'0.5rem', display:'flex', justifyContent: 'right', alignItems:'center'}}>
+                    <MultiCascader 
+                      labelKey='label'
+                      cascade={false}
+                      searchable={false} 
+                      appearance='default' 
+                      data={filters} 
+                      placeholder='Filters' 
+                      style={{width:'80%'}}
+                      onClean={handleCascadeClean}
+                      onCheck={handleCascadeCheck}
+                      menuHeight='auto'
+                    />
+                    <Button style={{ marginLeft: '0.5rem', width:'20%'}}>Sort By</Button>
+                  </div>
+                  <List bordered style={style} hover>
+                    {tickets.map((item:Ticket, index) => (
+                      <List.Item 
+                        key={item.id} 
+                        index={index + 1} 
+                        onClick={() => selectTicket(item)}
+                        style={selectedTicket?.id === item.id ? {backgroundColor: 'lightskyblue'} : {}}
+                      >
+                        <FlexboxGrid>
+                          <FlexboxGrid.Item colspan={4} style={{...styleCenter, fontSize: 60, float:'left', width: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom:'auto'}}>
+                            {cloneElement(icons[item.type as keyof typeof icons], {})}
+                          </FlexboxGrid.Item>
+                          <FlexboxGrid.Item
+                            colspan={18}
+                            style={{
+                              ...styleCenter,
+                              flexDirection: 'column',
+                              alignItems: 'flex-start',
+                              overflow: 'hidden',
+                            }}
+                          >
+                            <div style={titleStyle}>#{item['id']} {item['topic']}</div>
+                            <div style={{display: 'flex', alignItems: 'center', marginBottom:'0.25rem'}}>
+                              {getTag('status', item.status, 'sm')}
+                              {getTag('severity', item.severity, 'sm')}
+                              {getTag('type', item.type, 'sm')}
+                            </div>
 
-                          <div style={{display: 'block', alignItems: 'left', justifyContent: 'left'}}>
-                          {/* TODO: The Calendar Icon and User Circle Icon do not align properly column wise*/}
-                            
-                            <FlexboxGrid>
-                              <FlexboxGrid.Item colspan={24} style={{textAlign:'left'}}>
-                                <CalendarIcon /> 
-                                {' ' + timestampToDatestring(item?.createdAt)}
-                              </FlexboxGrid.Item>
-                              <FlexboxGrid.Item colspan={24} style={{textAlign:'left'}}>
-                                <UserCircleIcon /> 
-                                {' ' + item['assignedTo']}
-                              </FlexboxGrid.Item>
-                            </FlexboxGrid>
-                          </div>
-                        </FlexboxGrid.Item>
-                      </FlexboxGrid>
-                    </List.Item>
-                  ))}
-                </List>
+                            <div style={{display: 'block', alignItems: 'left', justifyContent: 'left'}}>
+                            {/* TODO: The Calendar Icon and User Circle Icon do not align properly column wise*/}
+                              
+                              <FlexboxGrid>
+                                <FlexboxGrid.Item colspan={24} style={{textAlign:'left'}}>
+                                  <CalendarIcon /> 
+                                  {' ' + timestampToDatestring(item?.createdAt)}
+                                </FlexboxGrid.Item>
+                                <FlexboxGrid.Item colspan={24} style={{textAlign:'left'}}>
+                                  <UserCircleIcon /> 
+                                  {' ' + item?.assignedTo?.name } <i>{'[#' + item?.assignedTo?.id + ']'}</i>
+                                </FlexboxGrid.Item>
+                              </FlexboxGrid>
+                            </div>
+                          </FlexboxGrid.Item>
+                        </FlexboxGrid>
+                      </List.Item>
+                    ))}
+                  </List>
+                  <div style={{display:'flex', justifyContent:'center', marginTop:'0.5rem'}}>
+                    <Pagination 
+                      prev 
+                      next
+                      first
+                      last
+                      total={totalTicketsCount} 
+                      limit={perPage} 
+                      activePage={activePage} 
+                      onChangePage={setActivePage}
+                      maxButtons={4}
+                    />
+                    <div style={{justifyContent: 'right'}}>
+                      <span style={{fontSize: 12, justifyContent: 'right', marginRight:'0.5rem'}}>Per Page</span>
+                      <SelectPicker
+                        value={perPage}
+                        onChange={(value) => {
+                          if (value)
+                            setPerPage(value);
+                        }}
+                        cleanable={false}
+                        searchable={false}
+                        data = {perPageOptions}
+                        size='sm'
+                        placement='topEnd'
+                      />
+                    </div>
+                  </div>
+                </div>
             }
 
             {
