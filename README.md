@@ -40,8 +40,6 @@ REACT_APP_BACKEND_URL=<backend_server_url> # This is the url of the backend serv
 
 ![image](https://github.com/mp051998/support-ticket-entry-system/assets/25613636/4416f26c-b32f-41ee-9408-f3dd923d370d)
 
-![image](https://github.com/mp051998/support-ticket-entry-system/assets/25613636/c6850917-807f-4672-8ee4-eae70d594420)
-
 ![image](https://github.com/mp051998/support-ticket-entry-system/assets/25613636/e4c3ceef-1966-4e8d-88ec-b10164475bbc)
 
 ![image](https://github.com/mp051998/support-ticket-entry-system/assets/25613636/346f2916-c848-41b9-b517-6b7094e09e2d)
